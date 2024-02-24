@@ -4,16 +4,10 @@ import dotenv from "dotenv";
 import { dbConnection } from './database/dbConnection.js';
 import {errorMiddleware} from './error/error.js';
 import router from './routes/reservationRoute.js';
-import path from "path";
-import { fileURLToPath } from 'url';
-
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 
 const app=express();
-
+dotenv.config({path: "./config/.env"});
 
 
 
@@ -28,14 +22,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use('/api/v1/reservation',router);
 
-app.use(express.static(path.join(__dirname, '/frontend/dist')))
+app.get("/", (req, res, next)=>{return res.status(200).json({
+  success: true,
+  message: "HELLO WORLD AGAIN"
+})})
 
-app.get('*',(req,res) =>
- res.sendFile(
-    path.join(__dirname, "/frontend/dist/index.html"))
- );
-
-dotenv.config({path: "./config/.env"});
 dbConnection();
 app.use(errorMiddleware);
 export default app;
